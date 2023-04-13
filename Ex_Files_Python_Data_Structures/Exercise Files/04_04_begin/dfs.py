@@ -10,7 +10,26 @@ from stack import Stack
 
 
 def dfs(maze, start, goal):
-    pass
+    stack = Stack()
+    stack.push(start)
+    predecessors = {start: None}
+
+    while not stack.is_empty():
+        current_cell = stack.pop()
+        # First if statement checks if it's the goal, and if it is, shows the path
+        if current_cell == goal:
+            return get_path(predecessors, start, goal)
+        # if not, keep going, in clockwise direction, starting with up / north
+        for direction in ["up", "right", "down", "left"]:
+            row_offset, col_offset = offsets[direction]
+            neighbor = (current_cell[0] + row_offset, current_cell[1] + col_offset)
+            # check to make sure pos is on the maze and that neighbor isn't already in predecessors
+            # if not, then push neighbor onto stack and add neighbor to predecessors dictionary
+            # update predecessors dictionary with the new current_cell & repeat til goal found
+            if is_legal_pos(maze, neighbor) and neighbor not in predecessors:
+                stack.push(neighbor)
+                predecessors[neighbor] = current_cell
+    return None
 
 
 if __name__ == "__main__":
